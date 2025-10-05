@@ -1,0 +1,129 @@
+load("//tools/lint:lint.bzl", "add_lint_tests")
+load(
+    "//tools/skylark:drake_cc.bzl",
+    "drake_cc_googletest",
+    "drake_cc_library",
+    "drake_cc_package_library",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+drake_cc_package_library(
+    name = "quasidynamic",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":quasidynamic_differentiable_contact_model",
+        ":quasidynamic_linear_pusher",
+        ":quasidynamic_multibody_plant",
+        ":quasidynamic_planar_plant",
+    ],
+)
+
+drake_cc_library(
+    name = "quasidynamic_differentiable_contact_model",
+    srcs = ["quasidynamic_differentiable_contact_model.cc"],
+    hdrs = ["quasidynamic_differentiable_contact_model.h"],
+    deps = [
+        "//math:autodiff",
+        "//math:gradient",
+        "//solvers:solve_conic_program",
+        "//systems/framework:leaf_system",
+    ],
+)
+
+drake_cc_library(
+    name = "quasidynamic_linear_pusher",
+    srcs = ["quasidynamic_linear_pusher.cc"],
+    hdrs = ["quasidynamic_linear_pusher.h"],
+    deps = [
+        ":quasidynamic_differentiable_contact_model",
+        "//geometry:meshcat",
+    ],
+)
+
+drake_cc_library(
+    name = "quasidynamic_multibody_plant",
+    srcs = ["quasidynamic_multibody_plant.cc"],
+    hdrs = ["quasidynamic_multibody_plant.h"],
+    deps = [
+        ":quasidynamic_differentiable_contact_model",
+        "//geometry:geometry_ids",
+        "//geometry:meshcat",
+        "//geometry:rgba",
+        "//geometry:shape_specification",
+        "//math:geometric_transform",
+        "//multibody/tree:multibody_tree_indexes",
+        "//multibody/tree:spatial_inertia",
+    ],
+    implementation_deps = [
+        "//common:copyable_unique_ptr",
+        "//common:overloaded",
+        "//geometry/proximity:calc_proximity",
+        "//math:autodiff",
+        "//math:gradient",
+        "//multibody/tree",
+    ],
+)
+
+drake_cc_library(
+    name = "quasidynamic_planar_plant",
+    srcs = ["quasidynamic_planar_plant.cc"],
+    hdrs = ["quasidynamic_planar_plant.h"],
+    deps = [
+        ":quasidynamic_differentiable_contact_model",
+        "//geometry:geometry_ids",
+        "//geometry:meshcat",
+        "//geometry:rgba",
+        "//geometry:shape_2d_specification",
+        "//geometry:shape_specification",
+        "//math:geometric_transform",
+        "//math:geometric_transform_2d",
+        "//multibody/tree:multibody_tree_indexes",
+    ],
+    implementation_deps = [
+        "//common:copyable_unique_ptr",
+        "//common:overloaded",
+        "//geometry/proximity:calc_proximity",
+        "//math:autodiff",
+        "//math:gradient",
+        "//multibody/tree",
+    ],
+)
+
+# === test/ ===
+
+drake_cc_googletest(
+    name = "quasidynamic_differentiable_contact_model_test",
+    deps = [
+        ":quasidynamic_differentiable_contact_model",
+    ],
+)
+
+drake_cc_googletest(
+    name = "quasidynamic_linear_pusher_test",
+    deps = [
+        ":quasidynamic_linear_pusher",
+        "//common/test_utilities:eigen_matrix_compare",
+        "//multibody/quasidynamic/test_utilities:eval_quasidynamic_differentiable_contact_model",  # noqa
+    ],
+)
+
+drake_cc_googletest(
+    name = "quasidynamic_multibody_plant_test",
+    deps = [
+        ":quasidynamic_multibody_plant",
+        "//common/test_utilities:eigen_matrix_compare",
+        "//multibody/quasidynamic/test_utilities:eval_quasidynamic_differentiable_contact_model",  # noqa
+    ],
+)
+
+drake_cc_googletest(
+    name = "quasidynamic_planar_plant_test",
+    deps = [
+        ":quasidynamic_planar_plant",
+        "//common/test_utilities:eigen_matrix_compare",
+        "//multibody/quasidynamic/test_utilities:eval_quasidynamic_differentiable_contact_model",  # noqa
+    ],
+)
+
+add_lint_tests()

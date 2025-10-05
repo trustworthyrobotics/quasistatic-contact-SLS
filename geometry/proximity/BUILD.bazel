@@ -35,6 +35,7 @@ drake_cc_package_library(
         ":bvh",
         ":bvh_updater",
         ":calc_obb",
+        ":calc_proximity",
         ":collision_filter",
         ":contact_surface_utility",
         ":deformable_contact_geometries",
@@ -177,6 +178,21 @@ drake_cc_library(
         ":bv",
         "//common:essential",
         "//geometry:shape_specification",
+    ],
+)
+
+drake_cc_library(
+    name = "calc_proximity",
+    srcs = ["calc_proximity.cc"],
+    hdrs = ["calc_proximity.h"],
+    deps = [
+        "//common:unused",
+        "//geometry:shape_2d_specification",
+        "//geometry:shape_specification",
+        "//geometry/query_results:signed_distance_pair",
+        "//math:geometric_transform",
+        "//math:geometric_transform_2d",
+        "//solvers:solve_conic_program",
     ],
 )
 
@@ -1141,6 +1157,16 @@ drake_cc_googletest(
         ":calc_obb",
         "//common:find_resource",
         "//common/test_utilities:eigen_matrix_compare",
+    ],
+)
+
+drake_cc_googletest(
+    name = "calc_proximity_test",
+    deps = [
+        ":calc_proximity",
+        "//common/test_utilities:eigen_matrix_compare",
+        "//math:autodiff",
+        "//math:gradient",
     ],
 )
 

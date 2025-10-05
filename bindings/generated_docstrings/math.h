@@ -42,6 +42,7 @@
 // #include "drake/math/quaternion.h"
 // #include "drake/math/random_rotation.h"
 // #include "drake/math/rigid_transform.h"
+// #include "drake/math/rigid_transform_2d.h"
 // #include "drake/math/roll_pitch_yaw.h"
 // #include "drake/math/rotation_conversion_gradient.h"
 // #include "drake/math/rotation_matrix.h"
@@ -2954,6 +2955,377 @@ RigidTransform, i.e., position vector from Ao (frame A's origin) to Bo
 (frame B's origin).)""";
         } translation;
       } RigidTransform;
+      // Symbol: drake::math::RigidTransform2d
+      struct /* RigidTransform2d */ {
+        // Source: drake/math/rigid_transform_2d.h
+        const char* doc =
+R"""(This class represents a proper rigid transform between two frames
+which can be regarded in two ways. A rigid transform describes the
+"pose" between two frames A and B (i.e., the relative orientation and
+position of A to B). Alternately, it can be regarded as a
+distance-preserving operator that can rotate and/or translate a rigid
+body without changing its shape or size (rigid) and without
+mirroring/reflecting the body (proper), e.g., it can add one position
+vector to another and express the result in a particular basis as
+``p_AoQ_A = X_AB * p_BoQ_B`` (Q is any point). In many ways, this
+rigid transform class is conceptually similar to using a homogeneous
+matrix as a linear operator. See operator* documentation for an
+exception.
+
+The class stores a rotation angle following the right-handed rule with
+the z-axis. The class also stores a position vector from Ao (the
+origin of frame A) to Bo (the origin of frame B). The position vector
+is expressed in frame A. The monogram notation for the transform
+relating frame A to B is ``X_AB``. The monogram notation for the
+rotation matrix relating A to B is ``R_AB``. The monogram notation for
+the position vector from Ao to Bo is ``p_AoBo_A``. See
+multibody_quantities for monogram notation for dynamics.
+
+Note:
+    This class does not store the frames associated with the transform
+    and cannot enforce correct usage of this class. For example, it
+    makes sense to multiply RigidTransform2ds as ``X_AB * X_BC``, but
+    not ``X_AB * X_CB``.
+
+Note:
+    This class is not a 3x3 transformation matrix -- even though its
+    operator*() methods act mostly like 3x3 matrix multiplication.
+    Instead, this class contains a scalr rotation angle and a 2x1
+    position vector. To convert this to a 2x3 matrix, use
+    GetAsMatrix23(). To convert this to a 3x3 matrix, use
+    GetAsMatrix3(). To convert this to an Eigen::Isometry, use
+    GetAsIsometry().)""";
+        // Symbol: drake::math::RigidTransform2d::GetAsIsometry2
+        struct /* GetAsIsometry2 */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Returns the isometry in ℜ² that is equivalent to a RigidTransform2d.)""";
+        } GetAsIsometry2;
+        // Symbol: drake::math::RigidTransform2d::GetAsMatrix23
+        struct /* GetAsMatrix23 */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Returns the 3x4 matrix associated with this RigidTransform2d, i.e.,
+X_AB.
+
+
+.. raw:: html
+
+    <details><summary>Click to expand C++ code...</summary>
+
+.. code-block:: c++
+
+    ┌                ┐
+    │ R_AB  p_AoBo_A │
+    └                ┘
+
+.. raw:: html
+
+    </details>)""";
+        } GetAsMatrix23;
+        // Symbol: drake::math::RigidTransform2d::GetAsMatrix3
+        struct /* GetAsMatrix3 */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Returns the 3x3 matrix associated with this RigidTransform2d, i.e.,
+X_AB.
+
+
+.. raw:: html
+
+    <details><summary>Click to expand C++ code...</summary>
+
+.. code-block:: c++
+
+    ┌                ┐
+    │ R_AB  p_AoBo_A │
+    │                │
+    │   0      1     │
+    └                ┘
+
+.. raw:: html
+
+    </details>)""";
+        } GetAsMatrix3;
+        // Symbol: drake::math::RigidTransform2d::Identity
+        struct /* Identity */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Returns the identity RigidTransform2d (corresponds to coincident
+frames).
+
+Returns:
+    the RigidTransform2d that corresponds to aligning the two frames
+    so unit vectors Ax = Bx, Ay = By and point Ao is coincident with
+    Bo.)""";
+        } Identity;
+        // Symbol: drake::math::RigidTransform2d::InvertAndCompose
+        struct /* InvertAndCompose */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Calculates the product of ``this`` inverted and another
+RigidTransform2d. If you consider ``this`` to be the transform X_AB,
+and ``other`` to be X_AC, then this method returns X_BC = X_AB⁻¹ *
+X_AC. For T==double, this method can be *much* faster than inverting
+first and then performing the composition, because it can take
+advantage of the special structure of a rigid transform to avoid
+unnecessary memory and floating point operations. On some platforms it
+can use SIMD instructions for further speedups.
+
+Parameter ``other``:
+    RigidTransform2d that post-multiplies ``this`` inverted.
+
+Returns ``X_BC``:
+    where X_BC = this⁻¹ * other.
+
+Note:
+    It is possible (albeit improbable) to create an invalid rigid
+    transform by accumulating round-off error with a large number of
+    multiplies.)""";
+        } InvertAndCompose;
+        // Symbol: drake::math::RigidTransform2d::RigidTransform2d<T>
+        struct /* ctor */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc_0args =
+R"""(Constructs the RigidTransform2d that corresponds to aligning the two
+frames so unit vectors Ax = Bx, Ay = By and point Ao is coincident
+with Bo. Hence, the constructed RigidTransform2d contains an identity
+rotation and a zero position vector.)""";
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc_2args_theta_p =
+R"""(Constructs a RigidTransform2d from a rotation angle and a position
+vector.
+
+Parameter ``theta``:
+    rotation matrix relating frames A and B (e.g., ``theta_AB``).
+
+Parameter ``p``:
+    position vector from frame A's origin to frame B's origin,
+    expressed in frame A. In monogram notation p is denoted
+    ``p_AoBo_A``.)""";
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc_1args_theta =
+R"""(Constructs a RigidTransform2d with a given rotation angle and a zero
+position vector.
+
+Parameter ``theta``:
+    rotation matrix relating frames A and B (e.g., ``theta_AB``).)""";
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc_1args_p =
+R"""(Constructs a RigidTransform2d that contains an identity rotation and a
+given position vector ``p``.
+
+Parameter ``p``:
+    position vector from frame A's origin to frame B's origin,
+    expressed in frame A. In monogram notation p is denoted
+    ``p_AoBo_A``.)""";
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc_1args_translation =
+R"""(Constructs a RigidTransform2d that contains an identity RotationMatrix
+and the position vector underlying the given ``translation``.
+
+Parameter ``translation``:
+    translation-only transform that stores p_AoQ_A, the position
+    vector from frame A's origin to a point Q, expressed in frame A.
+
+Note:
+    The constructed RigidTransform2d ``X_AAq`` relates frame A to a
+    frame Aq whose basis unit vectors are aligned with Ax, Ay, Az and
+    whose origin position is located at point Q.
+
+Note:
+    This constructor provides an implicit conversion from Translation
+    to RigidTransform2d.)""";
+        } ctor;
+        // Symbol: drake::math::RigidTransform2d::SetIdentity
+        struct /* SetIdentity */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Sets ``this`` RigidTransform2d so it corresponds to aligning the two
+frames so unit vectors Ax = Bx, Ay = By and point Ao is coincident
+with Bo.)""";
+        } SetIdentity;
+        // Symbol: drake::math::RigidTransform2d::angle
+        struct /* angle */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Returns theta_AB, the rotation angle portion of ``this``
+RigidTransform2d.
+
+Returns:
+    theta_AB the rotation angle portion of ``this`` RigidTransform2d.)""";
+        } angle;
+        // Symbol: drake::math::RigidTransform2d::cast
+        struct /* cast */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Creates a RigidTransform2d templatized on a scalar type U from a
+RigidTransform2d templatized on scalar type T. For example,
+
+
+.. raw:: html
+
+    <details><summary>Click to expand C++ code...</summary>
+
+.. code-block:: c++
+
+    RigidTransform2d<double> source = RigidTransform2d<double>::Identity();
+    RigidTransform2d<AutoDiffXd> foo = source.cast<AutoDiffXd>();
+
+.. raw:: html
+
+    </details>
+
+Template parameter ``U``:
+    Scalar type on which the returned RigidTransform2d is templated.)""";
+        } cast;
+        // Symbol: drake::math::RigidTransform2d::inverse
+        struct /* inverse */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Returns X_BA = X_AB⁻¹, the inverse of ``this`` RigidTransform2d.
+
+Note:
+    The inverse of RigidTransform2d X_AB is X_BA, which contains the
+    rotation matrix R_BA = R_AB⁻¹ = R_ABᵀ and the position vector
+    ``p_BoAo_B_`` (position from B's origin Bo to A's origin Ao,
+    expressed in frame B).
+
+Note:
+    : The square-root of a RigidTransform2d's condition number is
+    roughly the magnitude of the position vector. The accuracy of the
+    calculation for the inverse of a RigidTransform2d drops off with
+    the sqrt condition number.)""";
+        } inverse;
+        // Symbol: drake::math::RigidTransform2d::operator*
+        struct /* operator_mul */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc_1args_other =
+R"""(Multiplies ``this`` RigidTransform2d ``X_AB`` by the ``other``
+RigidTransform2d ``X_BC`` and returns the RigidTransform2d ``X_AC =
+X_AB * X_BC``.)""";
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc_1args_p_BoQ_B =
+R"""(Multiplies ``this`` RigidTransform2d ``X_AB`` by the position vector
+``p_BoQ_B`` which is from Bo (B's origin) to an arbitrary point Q.
+
+Parameter ``p_BoQ_B``:
+    position vector from Bo to Q, expressed in frame B.
+
+Returns ``p_AoQ_A``:
+    position vector from Ao to Q, expressed in frame A.)""";
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc_1args_constEigenMatrixBase =
+R"""(Multiplies ``this`` RigidTransform2d ``X_AB`` by the n position
+vectors ``p_BoQ1_B`` ... `p_BoQn_B`, where ``p_BoQi_B`` is the iᵗʰ
+position vector from Bo (frame B's origin) to an arbitrary point Qi,
+expressed in frame B.
+
+Parameter ``p_BoQ_B``:
+    ``2 x n`` matrix with n position vectors ``p_BoQi_B`` or an
+    expression that resolves to a ``2 x n`` matrix of position
+    vectors.
+
+Returns ``p_AoQ_A``:
+    ``2 x n`` matrix with n position vectors ``p_AoQi_A``, i.e., n
+    position vectors from Ao (frame A's origin) to Qi, expressed in
+    frame A. Specifically, this operator* is defined so that ``X_AB *
+    p_BoQ_B`` returns ``p_AoQ_A = p_AoBo_A + R_AB * p_BoQ_B``, where
+    ``p_AoBo_A`` is the position vector from Ao to Bo expressed in A
+    and ``R_AB`` is the rotation matrix relating the orientation of
+    frames A and B.
+
+Note:
+    As needed, use parentheses. This operator* is not associative. To
+    see this, let ``p = p_AoBo_A``, `q = p_BoQ_B` and note (X_AB * q)
+    * 7 = (p + R_AB * q) * 7 ≠ X_AB * (q * 7) = p + R_AB * (q * 7).
+
+
+.. raw:: html
+
+    <details><summary>Click to expand C++ code...</summary>
+
+.. code-block:: c++
+
+    const RigidTransform2d<double> X_AB(0.1, Vector3d(1, 2, 3));
+    Eigen::Matrix<double, 2, 3> p_BoQ_B;
+    p_BoQ_B.col(0) = Vector2d(4, 5);
+    p_BoQ_B.col(1) = Vector2d(6, 7);
+    p_BoQ_B.col(2) = Vector2d(8, 9);
+    const Eigen::Matrix<double, 2, 3> p_AoQ_A = X_AB * p_BoQ_B;
+
+.. raw:: html
+
+    </details>)""";
+        } operator_mul;
+        // Symbol: drake::math::RigidTransform2d::operator*=
+        struct /* operator_imul */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(In-place multiply of ``this`` RigidTransform2d ``X_AB`` by ``other``
+RigidTransform2d ``X_BC``.
+
+Parameter ``other``:
+    RigidTransform2d that post-multiplies ``this``.
+
+Returns:
+    ``this`` RigidTransform2d which has been multiplied by ``other``.
+    On return, ``this = X_AC``, where ``X_AC = X_AB * X_BC``.)""";
+        } operator_imul;
+        // Symbol: drake::math::RigidTransform2d::rotation_matrix
+        struct /* rotation_matrix */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Returns R_AB, the rotation matrix portion of ``this``
+RigidTransform2d.
+
+Returns:
+    R_AB the rotation matrix portion of ``this`` RigidTransform2d.)""";
+        } rotation_matrix;
+        // Symbol: drake::math::RigidTransform2d::set
+        struct /* set */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Sets ``this`` RigidTransform2d from a rotation angle and a position
+vector.
+
+Parameter ``theta``:
+    rotation matrix relating frames A and B (e.g., ``theta_AB``).
+
+Parameter ``p``:
+    position vector from frame A's origin to frame B's origin,
+    expressed in frame A. In monogram notation p is denoted
+    ``p_AoBo_A``.)""";
+        } set;
+        // Symbol: drake::math::RigidTransform2d::set_angle
+        struct /* set_angle */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Sets the rotation angle part of ``this`` RigidTransform2d.
+
+Parameter ``theta``:
+    an angle (in radians).)""";
+        } set_angle;
+        // Symbol: drake::math::RigidTransform2d::set_translation
+        struct /* set_translation */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Sets the position vector portion of ``this`` RigidTransform2d.
+
+Parameter ``p``:
+    position vector from Ao (frame A's origin) to Bo (frame B's
+    origin) expressed in frame A. In monogram notation p is denoted
+    p_AoBo_A.)""";
+        } set_translation;
+        // Symbol: drake::math::RigidTransform2d::translation
+        struct /* translation */ {
+          // Source: drake/math/rigid_transform_2d.h
+          const char* doc =
+R"""(Returns ``p_AoBo_A``, the position vector portion of ``this``
+RigidTransform2d, i.e., position vector from Ao (frame A's origin) to
+Bo (frame B's origin).)""";
+        } translation;
+      } RigidTransform2d;
       // Symbol: drake::math::RigidTransformd
       struct /* RigidTransformd */ {
         // Source: drake/math/rigid_transform.h

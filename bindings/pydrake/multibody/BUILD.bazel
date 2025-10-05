@@ -142,6 +142,7 @@ drake_pybind_library(
     ],
     package_info = PACKAGE_INFO,
     py_deps = [
+        ":fem_py",
         ":math_py",
         ":module_py",
         "//bindings/pydrake/systems:framework_py",
@@ -260,6 +261,24 @@ drake_pybind_library(
 )
 
 drake_pybind_library(
+    name = "quasidynamic_py",
+    cc_deps = [
+        "//bindings/generated_docstrings:multibody_quasidynamic",
+        "//bindings/pydrake/common:cpp_template_pybind",
+        "//bindings/pydrake/common:default_scalars_pybind",
+        "//bindings/pydrake/common:type_pack",
+    ],
+    cc_srcs = ["quasidynamic_py.cc"],
+    package_info = PACKAGE_INFO,
+    py_deps = [
+        ":module_py",
+        ":tree_py",
+        "//bindings/pydrake/systems:framework_py",
+        "//bindings/pydrake/geometry",
+    ],
+)
+
+drake_pybind_library(
     name = "rational_py",
     cc_deps = [
         "//bindings/generated_docstrings:multibody_rational",
@@ -357,6 +376,7 @@ PY_LIBRARIES_WITH_INSTALL = [
     ":optimization_py",
     ":parsing_py",
     ":plant_py",
+    ":quasidynamic_py",
     ":rational_py",
     ":tree_py",
 ]
@@ -558,6 +578,14 @@ drake_py_unittest(
         "//bindings/pydrake:trajectories_py",
         "//bindings/pydrake/common/test_utilities",
         "//bindings/pydrake/solvers",
+    ],
+)
+
+drake_py_unittest(
+    name = "quasidynamic_test",
+    deps = [
+        ":quasidynamic_py",
+        "//bindings/pydrake/common/test_utilities",
     ],
 )
 

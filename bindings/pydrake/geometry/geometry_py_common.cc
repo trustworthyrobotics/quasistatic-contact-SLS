@@ -30,6 +30,7 @@
 #include "drake/geometry/mesh_source.h"
 #include "drake/geometry/proximity/plane.h"
 #include "drake/geometry/proximity_properties.h"
+#include "drake/geometry/shape_2d_specification.h"
 #include "drake/geometry/shape_specification.h"
 
 namespace drake {
@@ -467,6 +468,48 @@ void DefineRoleAssign(py::module m) {
   }
 }
 
+void DefineShapes2d(py::module m) {
+  // Shape constructors.
+  {
+    py::class_<Shape2d> shape_cls(m, "Shape2d", doc.Shape2d.doc);
+    shape_cls  // BR
+        .def("__repr__", [](const Shape2d& self) { return self.to_string(); });
+    DefClone(&shape_cls);
+
+    py::class_<Circle, Shape2d>(m, "Circle", doc.Circle.doc)
+        .def(py::init<double>(), py::arg("radius"), doc.Circle.ctor.doc)
+        .def("radius", &Circle::radius, doc.Circle.radius.doc)
+        .def(py::pickle([](const Circle& self) { return self.radius(); },
+            [](double radius) { return Circle(radius); }));
+
+    py::class_<Obround, Shape2d>(m, "Obround", doc.Obround.doc)
+        .def(py::init<double, double>(), py::arg("radius"), py::arg("length"),
+            doc.Obround.ctor.doc)
+        .def("radius", &Obround::radius, doc.Obround.radius.doc)
+        .def("length", &Obround::length, doc.Obround.length.doc)
+        .def(py::pickle(
+            [](const Obround& self) {
+              return std::make_pair(self.radius(), self.length());
+            },
+            [](std::pair<double, double> dims) {
+              return Obround(dims.first, dims.second);
+            }));
+
+    py::class_<Rectangle, Shape2d>(m, "Rectangle", doc.Rectangle.doc)
+        .def(py::init<double, double>(), py::arg("width"), py::arg("height"),
+            doc.Rectangle.ctor.doc)
+        .def("width", &Rectangle::width, doc.Rectangle.width.doc)
+        .def("height", &Rectangle::height, doc.Rectangle.height.doc)
+        .def(py::pickle(
+            [](const Rectangle& self) {
+              return std::make_pair(self.width(), self.height());
+            },
+            [](std::pair<double, double> dims) {
+              return Rectangle(dims.first, dims.second);
+            }));
+  }
+}
+
 void DefineShapes(py::module m) {
   // Shape constructors.
   {
@@ -655,6 +698,8 @@ void DefineShapes(py::module m) {
 }
 
 void DefineMiscFunctions(py::module m) {
+  m.def("CalcArea", &CalcArea, py::arg("shape"), doc.CalcArea.doc);
+
   m.def("CalcVolume", &CalcVolume, py::arg("shape"), doc.CalcVolume.doc);
 
   m.def("MakePhongIllustrationProperties", &MakePhongIllustrationProperties,
@@ -783,6 +828,7 @@ void DefineGeometryCommon(py::module m) {
   DefineGeometryPropertiesSubclasses(m);
   DefineInMemoryMesh(m);
   DefineMeshSource(m);
+  DefineShapes2d(m);
   DefineShapes(m);
   DefineGeometrySet(m);
   DefineCollisionFilterScope(m);

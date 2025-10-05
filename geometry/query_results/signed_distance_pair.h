@@ -27,10 +27,10 @@ namespace geometry {
           touching, and the vector will be populated by NaN values.
  @tparam T The underlying scalar type. Must be a valid Eigen scalar.
  */
-template <typename T>
-struct SignedDistancePair {
-  DRAKE_DEFAULT_COPY_AND_MOVE_AND_ASSIGN(SignedDistancePair);
-  SignedDistancePair() = default;
+template <typename T, int dim>
+struct SignedDistancePairImpl {
+  DRAKE_DEFAULT_COPY_AND_MOVE_AND_ASSIGN(SignedDistancePairImpl);
+  SignedDistancePairImpl() = default;
 
   // TODO(DamrongGuoy): When we have a full implementation of computing
   //  nhat_BA_W in ComputeSignedDistancePairwiseClosestPoints, check a
@@ -44,9 +44,10 @@ struct SignedDistancePair {
    @param dist          The signed distance between p_A and p_B.
    @param nhat_BA_W_in  A direction of fastest increasing distance.
    @pre nhat_BA_W_in is unit-length. */
-  SignedDistancePair(GeometryId a, GeometryId b, const Vector3<T>& p_ACa_in,
-                     const Vector3<T>& p_BCb_in, const T& dist,
-                     const Vector3<T>& nhat_BA_W_in)
+  SignedDistancePairImpl(GeometryId a, GeometryId b,
+                         const Vector<T, dim>& p_ACa_in,
+                         const Vector<T, dim>& p_BCb_in, const T& dist,
+                         const Vector<T, dim>& nhat_BA_W_in)
       : id_A(a),
         id_B(b),
         p_ACa(p_ACa_in),
@@ -75,14 +76,20 @@ struct SignedDistancePair {
   //     query QueryObject for that information). Although, such a query can
   //     easily be provided.
   /** The witness point on geometry A's surface, expressed in A's frame. */
-  Vector3<T> p_ACa;
+  Vector<T, dim> p_ACa;
   /** The witness point on geometry B's surface, expressed in B's frame. */
-  Vector3<T> p_BCb;
+  Vector<T, dim> p_BCb;
   /** The signed distance between p_ACa and p_BCb. */
   T distance{};
   /** A direction of fastest increasing distance. */
-  Vector3<T> nhat_BA_W;
+  Vector<T, dim> nhat_BA_W;
 };
+
+template <typename T>
+using SignedDistancePair = SignedDistancePairImpl<T, 3>;
+
+template <typename T>
+using SignedDistancePair2d = SignedDistancePairImpl<T, 2>;
 
 }  // namespace geometry
 }  // namespace drake

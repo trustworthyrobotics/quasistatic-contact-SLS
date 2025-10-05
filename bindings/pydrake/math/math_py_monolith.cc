@@ -29,6 +29,7 @@
 #include "drake/math/quaternion.h"
 #include "drake/math/random_rotation.h"
 #include "drake/math/rigid_transform.h"
+#include "drake/math/rigid_transform_2d.h"
 #include "drake/math/roll_pitch_yaw.h"
 #include "drake/math/rotation_matrix.h"
 #include "drake/math/soft_min_max.h"
@@ -320,6 +321,73 @@ void DefineRollPitchYaw(py::class_<PyClass<T>>& cls) {
   }
 }
 
+template <template <typename> typename PyClass, typename T>
+// NOLINTNEXTLINE(runtime/references)
+void DefineRigidTransform2d(py::module m, py::class_<PyClass<T>>& cls) {
+  py::tuple param = GetPyParam<T>();
+
+  // NOLINTNEXTLINE(build/namespaces): Emulate placement in namespace.
+  using namespace drake::math;
+  constexpr auto& doc = pydrake_doc_math.drake.math;
+
+  {
+    using Class = RigidTransform2d<T>;
+    constexpr auto& cls_doc = doc.RigidTransform2d;
+    cls  // BR
+        .def(py::init(), cls_doc.ctor.doc_0args)
+        .def(py::init<const Class&>(), py::arg("other"))
+        .def(py::init<const T&, const Vector2<T>&>(), py::arg("theta"),
+            py::arg("p"), cls_doc.ctor.doc_2args_theta_p)
+        .def(py::init<const T&>(), py::arg("theta"),
+            cls_doc.ctor.doc_1args_theta)
+        .def(py::init<const Vector2<T>&>(), py::arg("p"),
+            cls_doc.ctor.doc_1args_p)
+        .def(
+            "set", &Class::set, py::arg("theta"), py::arg("p"), cls_doc.set.doc)
+        .def("angle", &Class::angle, return_value_policy_for_scalar_type<T>(),
+            cls_doc.angle.doc)
+        .def("set_angle", &Class::set_angle, py::arg("theta"),
+            cls_doc.set_angle.doc)
+        .def("translation", &Class::translation,
+            return_value_policy_for_scalar_type<T>(), cls_doc.translation.doc)
+        .def("set_translation", &Class::set_translation, py::arg("p"),
+            cls_doc.set_translation.doc)
+        .def_static("Identity", &Class::Identity, cls_doc.Identity.doc)
+        .def("rotation_matrix", &Class::rotation_matrix,
+            cls_doc.rotation_matrix.doc)
+        .def("GetAsMatrix3", &Class::GetAsMatrix3, cls_doc.GetAsMatrix3.doc)
+        .def("GetAsMatrix23", &Class::GetAsMatrix23, cls_doc.GetAsMatrix23.doc)
+        .def("SetIdentity", &Class::SetIdentity, cls_doc.SetIdentity.doc)
+        .def("inverse", &Class::inverse, cls_doc.inverse.doc)
+        .def("InvertAndCompose", &Class::InvertAndCompose, py::arg("other"),
+            cls_doc.InvertAndCompose.doc)
+        .def(
+            "multiply",
+            [](const Class* self, const Class& other) { return *self * other; },
+            py::arg("other"), cls_doc.operator_mul.doc_1args_other)
+        .def(
+            "multiply",
+            [](const Class* self, const Vector2<T>& p_BoQ_B) {
+              return *self * p_BoQ_B;
+            },
+            py::arg("p_BoQ_B"), cls_doc.operator_mul.doc_1args_p_BoQ_B)
+        .def(
+            "multiply",
+            [](const Class* self, const Matrix2X<T>& p_BoQ_B) {
+              return *self * p_BoQ_B;
+            },
+            py::arg("p_BoQ_B"),
+            cls_doc.operator_mul.doc_1args_constEigenMatrixBase);
+    cls.attr("multiply") = WrapToMatchInputShape(cls.attr("multiply"));
+    cls.attr("__matmul__") = cls.attr("multiply");
+    DefCopyAndDeepCopy(&cls);
+    DefCast<T>(&cls, cls_doc.cast.doc);
+    AddValueInstantiation<Class>(m);
+    // Some ports need `Value<std::vector<Class>>`.
+    AddValueInstantiation<std::vector<Class>>(m);
+  }
+}
+
 void DefineRigidTransformRotationMatrixRollPitchYaw(py::module m) {
   // NOLINTNEXTLINE(build/namespaces): Emulate placement in namespace.
   using namespace drake::math;
@@ -359,6 +427,15 @@ void DefineRigidTransformRotationMatrixRollPitchYaw(py::module m) {
   auto cls_rigid_transform_expression =
       DefineTemplateClassWithDefault<RigidTransform<Expression>>(
           m, "RigidTransform", param_expression, doc.RigidTransform.doc);
+  auto cls_rigid_transform_2d_double =
+      DefineTemplateClassWithDefault<RigidTransform2d<double>>(
+          m, "RigidTransform2d", param_double, doc.RigidTransform2d.doc);
+  auto cls_rigid_transform_2d_autodiff =
+      DefineTemplateClassWithDefault<RigidTransform2d<AutoDiffXd>>(
+          m, "RigidTransform2d", param_autodiff, doc.RigidTransform2d.doc);
+  auto cls_rigid_transform_2d_expression =
+      DefineTemplateClassWithDefault<RigidTransform2d<Expression>>(
+          m, "RigidTransform2d", param_expression, doc.RigidTransform2d.doc);
   DefineRotationMatrix(m, cls_rotation_matrix_double);
   DefineRotationMatrix(m, cls_rotation_matrix_autodiff);
   DefineRotationMatrix(m, cls_rotation_matrix_expression);
@@ -368,6 +445,9 @@ void DefineRigidTransformRotationMatrixRollPitchYaw(py::module m) {
   DefineRigidTransform(m, cls_rigid_transform_double);
   DefineRigidTransform(m, cls_rigid_transform_autodiff);
   DefineRigidTransform(m, cls_rigid_transform_expression);
+  DefineRigidTransform2d(m, cls_rigid_transform_2d_double);
+  DefineRigidTransform2d(m, cls_rigid_transform_2d_autodiff);
+  DefineRigidTransform2d(m, cls_rigid_transform_2d_expression);
 }
 
 template <typename T>

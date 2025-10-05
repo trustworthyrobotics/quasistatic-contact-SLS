@@ -463,6 +463,66 @@ class TestMath(unittest.TestCase):
         assert_pickle(self, rpy, RollPitchYaw.vector, T=T)
 
     @numpy_compare.check_all_types
+    def test_rotation_matrix_2d(self, T):
+        RigidTransform2d = mut.RigidTransform2d_[T]
+
+        def check_equality(X_actual, X_expected_matrix):
+            self.assertIsInstance(X_actual, RigidTransform2d)
+            numpy_compare.assert_float_equal(
+                X_actual.GetAsMatrix3(), X_expected_matrix
+            )
+
+        # - Constructors.
+        X_I_np = np.eye(3)
+        check_equality(RigidTransform2d(), X_I_np)
+        check_equality(RigidTransform2d(theta=0, p=[0, 0]), X_I_np)
+        check_equality(RigidTransform2d(theta=0), X_I_np)
+        check_equality(RigidTransform2d(p=[0, 0]), X_I_np)
+        # - Cast.
+        self.check_cast(mut.RigidTransform2d_, T)
+        # - Accessors, mutators, and general methods.
+        X = RigidTransform2d()
+        X.set(theta=0, p=[0, 0])
+        check_equality(RigidTransform2d.Identity(), X_I_np)
+        self.assertIsInstance(X.angle(), T)
+        X.set_angle(theta=0)
+        self.assertIsInstance(X.translation(), np.ndarray)
+        X.set_translation(p=[0, 0])
+        numpy_compare.assert_float_equal(X.rotation_matrix(), np.eye(2))
+        numpy_compare.assert_float_equal(X.GetAsMatrix3(), X_I_np)
+        numpy_compare.assert_float_equal(X.GetAsMatrix23(), X_I_np[:2])
+        check_equality(X.inverse(), X_I_np)
+        self.assertIsInstance(
+            X.multiply(other=RigidTransform2d()), RigidTransform2d
+        )
+        self.assertIsInstance(
+            X.InvertAndCompose(other=RigidTransform2d()), RigidTransform2d
+        )
+        self.assertIsInstance(X @ RigidTransform2d(), RigidTransform2d)
+        self.assertIsInstance(X @ [0, 0], np.ndarray)
+        # - Test shaping.
+        v = np.array([0.0, 0.0])
+        vs = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]).T
+        self.assertEqual((X @ v).shape, (2,))
+        self.assertEqual((X @ v.reshape((2, 1))).shape, (2, 1))
+        self.assertEqual((X @ vs).shape, (2, 3))
+        # - Repr.
+        z = repr(T(0.0))
+        type_suffix = {
+            float: "",
+            AutoDiffXd: "_[AutoDiffXd]",
+            Expression: "_[Expression]",
+        }[T]
+        self.assertEqual(
+            repr(RigidTransform2d()),
+            textwrap.dedent(f"""\
+        RigidTransform2d{type_suffix}(
+          theta={z},
+          p=[{z}, {z}],
+        )"""),
+        )
+
+    @numpy_compare.check_all_types
     def test_bspline_basis(self, T):
         BsplineBasis = mut.BsplineBasis_[T]
 

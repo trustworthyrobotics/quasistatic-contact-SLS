@@ -1,0 +1,65 @@
+load("//bindings/pydrake:pydrake.bzl", "add_lint_tests_pydrake")
+load(
+    "//tools/skylark:drake_py.bzl",
+    "drake_py_binary",
+    "drake_py_library",
+    "drake_py_test",
+    "drake_py_unittest",
+)
+
+package(default_visibility = [
+    "//examples/planning_through_contact:__pkg__",
+])
+
+drake_py_library(
+    name = "algorithms",
+    srcs = [
+        "__init__.py",
+        "fast_sls.py",
+        "iterative_lqr.py",
+        "iterative_sls.py",
+        "iterative_to.py",
+        "model_predictive_controller.py",
+        "traj_opt_problem.py",
+    ],
+    deps = [
+        "//bindings/pydrake",
+    ],
+)
+
+drake_py_unittest(
+    name = "fast_sls_test",
+    deps = [
+        ":algorithms",
+    ],
+)
+
+drake_py_unittest(
+    name = "iterative_lqr_test",
+    deps = [
+        ":algorithms",
+    ],
+)
+
+drake_py_unittest(
+    name = "iterative_sls_test",
+    deps = [
+        ":algorithms",
+    ],
+)
+
+drake_py_unittest(
+    name = "iterative_to_test",
+    deps = [
+        ":algorithms",
+    ],
+)
+
+drake_py_unittest(
+    name = "traj_opt_problem_test",
+    deps = [
+        ":algorithms",
+    ],
+)
+
+add_lint_tests_pydrake()

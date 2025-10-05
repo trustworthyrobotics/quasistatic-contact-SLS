@@ -7,7 +7,7 @@ import numpy as np
 
 from pydrake.common.test_utilities import numpy_compare
 from pydrake.common.value import Value
-from pydrake.math import RigidTransform_
+from pydrake.math import RigidTransform2d_, RigidTransform_
 import pydrake.symbolic as sym
 from pydrake.symbolic import Expression
 from pydrake.systems.framework import InputPort_, OutputPort_
@@ -736,6 +736,16 @@ class TestGeometrySceneGraph(unittest.TestCase):
         self.assertTupleEqual(obj.nhat_BA_W.shape, (3,))
 
     @numpy_compare.check_all_types
+    def test_signed_distance_2d_api(self, T):
+        obj = mut.SignedDistancePair2d_[T]()
+        self.assertIsInstance(obj.id_A, mut.GeometryId)
+        self.assertIsInstance(obj.id_B, mut.GeometryId)
+        self.assertTupleEqual(obj.p_ACa.shape, (2,))
+        self.assertTupleEqual(obj.p_BCb.shape, (2,))
+        self.assertIsInstance(obj.distance, T)
+        self.assertTupleEqual(obj.nhat_BA_W.shape, (2,))
+
+    @numpy_compare.check_all_types
     def test_signed_distance_to_point_api(self, T):
         obj = mut.SignedDistanceToPoint_[T]()
         self.assertIsInstance(obj.id_G, mut.GeometryId)
@@ -1006,3 +1016,33 @@ class TestGeometrySceneGraph(unittest.TestCase):
             # APIs available to both Triangle and Polygon-based fields.
             field.EvaluateAtVertex(v=0)
             field.EvaluateCartesian(e=0, p_MQ=(0.25, 0.25, 0))
+
+    @numpy_compare.check_nonsymbolic_types
+    def test_calc_proximity(self, T):
+        shape_A = mut.Sphere(radius=2.0)
+        shape_B = mut.Sphere(radius=1.0)
+        X_WA = RigidTransform_[T]([0.0, 0, 0])
+        X_WB = RigidTransform_[T]([4.0, 0, 0])
+
+        r = mut.CalcProximity(
+            shape_A=shape_A, X_WA=X_WA, shape_B=shape_B, X_WB=X_WB, kappa=0.0
+        )
+        self.assertTupleEqual(r.p_ACa.shape, (3,))
+        self.assertTupleEqual(r.p_BCb.shape, (3,))
+        self.assertTupleEqual(r.nhat_BA_W.shape, (3,))
+        self.assertIsInstance(r.distance, T)
+
+    @numpy_compare.check_nonsymbolic_types
+    def test_calc_proximity_2d(self, T):
+        shape_A = mut.Circle(radius=2.0)
+        shape_B = mut.Circle(radius=1.0)
+        X_WA = RigidTransform2d_[T]([0.0, 0])
+        X_WB = RigidTransform2d_[T]([4.0, 0])
+
+        r = mut.CalcProximity2d(
+            shape_A=shape_A, X_WA=X_WA, shape_B=shape_B, X_WB=X_WB, kappa=0.0
+        )
+        self.assertTupleEqual(r.p_ACa.shape, (2,))
+        self.assertTupleEqual(r.p_BCb.shape, (2,))
+        self.assertTupleEqual(r.nhat_BA_W.shape, (2,))
+        self.assertIsInstance(r.distance, T)

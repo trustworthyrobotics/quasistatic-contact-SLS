@@ -17,6 +17,7 @@
 // #include "drake/geometry/proximity/bvh.h"
 // #include "drake/geometry/proximity/bvh_updater.h"
 // #include "drake/geometry/proximity/calc_obb.h"
+// #include "drake/geometry/proximity/calc_proximity.h"
 // #include "drake/geometry/proximity/collision_filter.h"
 // #include "drake/geometry/proximity/contact_surface_utility.h"
 // #include "drake/geometry/proximity/deformable_contact_geometries.h"
@@ -312,6 +313,58 @@ which doesn't have a bounding box.
 Raises:
     RuntimeError if a referenced file cannot be opened.)""";
       } CalcObb;
+      // Symbol: drake::geometry::CalcProximity
+      struct /* CalcProximity */ {
+        // Source: drake/geometry/proximity/calc_proximity.h
+        const char* doc =
+R"""(Computes the proximity of a pair of 3D shapes. Only valid when the
+geometries are not in collision.
+
+Parameter ``shape_A``:
+    Shape A.
+
+Parameter ``X_WA``:
+    The pose of frame A relative to the world frame.
+
+Parameter ``shape_B``:
+    Shape B.
+
+Parameter ``X_WA``:
+    The pose of frame B relative to the world frame.
+
+Parameter ``kappa``:
+    Smoothing parameter. (Zero means no smoothing and larger values
+    mean higher smoothing.)
+
+Precondition:
+    ``kappa >= 0``)""";
+      } CalcProximity;
+      // Symbol: drake::geometry::CalcProximity2d
+      struct /* CalcProximity2d */ {
+        // Source: drake/geometry/proximity/calc_proximity.h
+        const char* doc =
+R"""(Computes the proximity of a pair of 2D shapes. Only valid when the
+geometries are not in collision.
+
+Parameter ``shape_A``:
+    Shape A.
+
+Parameter ``X_WA``:
+    The pose of frame A relative to the world frame.
+
+Parameter ``shape_B``:
+    Shape B.
+
+Parameter ``X_WA``:
+    The pose of frame B relative to the world frame.
+
+Parameter ``kappa``:
+    Smoothing parameter. (Zero means no smoothing and larger values
+    mean higher smoothing.)
+
+Precondition:
+    ``kappa >= 0``)""";
+      } CalcProximity2d;
       // Symbol: drake::geometry::ConvertVolumeToSurfaceMesh
       struct /* ConvertVolumeToSurfaceMesh */ {
         // Source: drake/geometry/proximity/volume_to_surface_mesh.h

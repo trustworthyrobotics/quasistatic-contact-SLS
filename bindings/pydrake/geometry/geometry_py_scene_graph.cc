@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "drake/bindings/generated_docstrings/geometry.h"
+#include "drake/bindings/generated_docstrings/geometry_proximity.h"
 #include "drake/bindings/generated_docstrings/geometry_query_results.h"
 #include "drake/bindings/pydrake/common/default_scalars_pybind.h"
 #include "drake/bindings/pydrake/common/serialize_pybind.h"
@@ -18,6 +19,7 @@
 #include "drake/bindings/pydrake/common/value_pybind.h"
 #include "drake/bindings/pydrake/geometry/geometry_py.h"
 #include "drake/geometry/geometry_frame.h"
+#include "drake/geometry/proximity/calc_proximity.h"
 #include "drake/geometry/scene_graph.h"
 #include "drake/geometry/scene_graph_config.h"
 
@@ -681,7 +683,7 @@ void DefineSignedDistancePair(py::module m, T) {
   py::tuple param = GetPyParam<T>();
   {
     using Class = SignedDistancePair<T>;
-    constexpr auto& cls_doc = doc_query_results.SignedDistancePair;
+    constexpr auto& cls_doc = doc_query_results.SignedDistancePairImpl;
     auto cls = DefineTemplateClassWithDefault<Class>(
         m, "SignedDistancePair", param, cls_doc.doc);
     cls  // BR
@@ -695,6 +697,28 @@ void DefineSignedDistancePair(py::module m, T) {
         .def_readwrite(
             "distance", &SignedDistancePair<T>::distance, cls_doc.distance.doc)
         .def_readwrite("nhat_BA_W", &SignedDistancePair<T>::nhat_BA_W,
+            return_value_policy_for_scalar_type<T>(), cls_doc.nhat_BA_W.doc);
+  }
+}
+
+template <typename T>
+void DefineSignedDistancePair2d(py::module m, T) {
+  py::tuple param = GetPyParam<T>();
+  {
+    using Class = SignedDistancePair2d<T>;
+    constexpr auto& cls_doc = doc_query_results.SignedDistancePairImpl;
+    auto cls = DefineTemplateClassWithDefault<Class>(
+        m, "SignedDistancePair2d", param, cls_doc.doc);
+    cls  // BR
+        .def(ParamInit<Class>(), cls_doc.ctor.doc)
+        .def_readwrite("id_A", &Class::id_A, cls_doc.id_A.doc)
+        .def_readwrite("id_B", &Class::id_B, cls_doc.id_B.doc)
+        .def_readwrite("p_ACa", &Class::p_ACa,
+            return_value_policy_for_scalar_type<T>(), cls_doc.p_ACa.doc)
+        .def_readwrite("p_BCb", &Class::p_BCb,
+            return_value_policy_for_scalar_type<T>(), cls_doc.p_BCb.doc)
+        .def_readwrite("distance", &Class::distance, cls_doc.distance.doc)
+        .def_readwrite("nhat_BA_W", &Class::nhat_BA_W,
             return_value_policy_for_scalar_type<T>(), cls_doc.nhat_BA_W.doc);
   }
 }
@@ -792,6 +816,20 @@ void DefineContactSurface(py::module m, T) {
     DefCopyAndDeepCopy(&cls);
   }
 }
+
+template <typename T>
+void DefineCalcProximity(py::module m, T) {
+  constexpr auto& doc_proximity = pydrake_doc_geometry_proximity.drake.geometry;
+  py::tuple param = GetPyParam<T>();
+
+  AddTemplateFunction(m, "CalcProximity", &CalcProximity<T>, param,
+      py::arg("shape_A"), py::arg("X_WA"), py::arg("shape_B"), py::arg("X_WB"),
+      py::arg("kappa") = 0.0, doc_proximity.CalcProximity.doc);
+
+  AddTemplateFunction(m, "CalcProximity2d", &CalcProximity2d<T>, param,
+      py::arg("shape_A"), py::arg("X_WA"), py::arg("shape_B"), py::arg("X_WB"),
+      py::arg("kappa") = 0.0, doc_proximity.CalcProximity2d.doc);
+}
 }  // namespace
 
 void DefineGeometrySceneGraph(py::module m) {
@@ -805,12 +843,15 @@ void DefineGeometrySceneGraph(py::module m) {
         DefineContactSurface(m, dummy);
         DefinePenetrationAsPointPair(m, dummy);
         DefineSignedDistancePair(m, dummy);
+        DefineSignedDistancePair2d(m, dummy);
         DefineSignedDistanceToPoint(m, dummy);
         DefineSceneGraphInspector(m, dummy);
         DefineQueryObject(m, dummy);
         DefineSceneGraph(m, dummy);
       },
       CommonScalarPack{});
+  type_visit([m](auto dummy) { DefineCalcProximity(m, dummy); },
+      NonSymbolicScalarPack{});
 }
 }  // namespace pydrake
 }  // namespace drake

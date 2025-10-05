@@ -64,6 +64,7 @@ drake_cc_package_library(
         ":scene_graph",
         ":scene_graph_config",
         ":scene_graph_inspector",
+        ":shape_2d_specification",
         ":shape_specification",
         ":utilities",
     ],
@@ -460,6 +461,16 @@ drake_cc_library(
         "//common:memory_file",
         "@fmt",
         "@tinyobjloader_internal//:tinyobjloader",
+    ],
+)
+
+drake_cc_library(
+    name = "shape_2d_specification",
+    srcs = ["shape_2d_specification.cc"],
+    hdrs = ["shape_2d_specification.h"],
+    deps = [
+        "//common:essential",
+        "//common:overloaded",
     ],
 )
 
@@ -1164,6 +1175,15 @@ drake_cc_googletest(
     deps = [
         ":geometry_frame",
         ":scene_graph_inspector",
+    ],
+)
+
+drake_cc_googletest(
+    name = "shape_2d_specification_test",
+    deps = [
+        ":shape_2d_specification",
+        "//common:overloaded",
+        "//common/test_utilities",
     ],
 )
 

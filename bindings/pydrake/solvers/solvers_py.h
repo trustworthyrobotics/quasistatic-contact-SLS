@@ -24,6 +24,9 @@ void DefineSolversClarabel(py::module m);
 /* Defines the CLP bindings. See solvers_py_clp.cc. */
 void DefineSolversClp(py::module m);
 
+/* Defines the Conic bindings. See solvers_py_conic.cc. */
+void DefineSolversConic(py::module m);
+
 /* Defines the CSDP bindings. See solvers_py_csdp.cc. */
 void DefineSolversCsdp(py::module m);
 

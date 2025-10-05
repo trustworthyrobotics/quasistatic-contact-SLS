@@ -25,6 +25,7 @@ drake_cc_package_library(
         ":evenly_distributed_pts_on_sphere",
         ":fourth_order_tensor",
         ":geometric_transform",
+        ":geometric_transform_2d",
         ":gradient",
         ":gray_code",
         ":jacobian",
@@ -186,6 +187,24 @@ drake_cc_library(
     implementation_deps = [
         "//common:hwy_dynamic",
         "@highway_internal//:hwy",
+    ],
+)
+
+drake_cc_library(
+    name = "geometric_transform_2d",
+    srcs = [
+        "rigid_transform_2d.cc",
+    ],
+    hdrs = [
+        "rigid_transform_2d.h",
+    ],
+    copts = [
+        "-O2",
+    ],
+    deps = [
+        "//common:default_scalars",
+        "//common:drake_bool",
+        "//common:essential",
     ],
 )
 
@@ -569,6 +588,16 @@ drake_cc_googletest(
         ":autodiff",
         ":geometric_transform",
         "//common/test_utilities",
+    ],
+)
+
+drake_cc_googletest(
+    name = "rigid_transform_2d_test",
+    deps = [
+        ":geometric_transform_2d",
+        "//common/test_utilities",
+        "//math:autodiff",
+        "//math:gradient",
     ],
 )
 

@@ -46,6 +46,7 @@ _SUBDIRS = [
     "multibody/optimization",
     "multibody/parsing",
     "multibody/plant",
+    "multibody/quasidynamic",
     "multibody/rational",
     "multibody/tree",
     "perception",

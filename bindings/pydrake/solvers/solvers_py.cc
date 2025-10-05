@@ -31,6 +31,7 @@ top-level documentation for :py:mod:`pydrake.math`.
   internal::DefineSolversSemidefiniteRelaxation(m);
   internal::DefineSolversClarabel(m);
   internal::DefineSolversClp(m);
+  internal::DefineSolversConic(m);
   internal::DefineSolversCsdp(m);
   internal::DefineSolversGurobi(m);
   internal::DefineSolversIpopt(m);

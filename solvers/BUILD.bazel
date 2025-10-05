@@ -92,6 +92,7 @@ drake_cc_package_library(
         ":snopt_solver",
         ":solution_result",
         ":solve",
+        ":solve_conic_program",
         ":solver_base",
         ":solver_id",
         ":solver_interface",
@@ -736,6 +737,23 @@ drake_cc_library(
         ":mathematical_program_test_util",
         ":solver_interface",
         "//common/test_utilities:eigen_matrix_compare",
+    ],
+)
+
+drake_cc_library(
+    name = "solve_conic_program",
+    srcs = ["solve_conic_program.cc"],
+    hdrs = ["solve_conic_program.h"],
+    deps = [
+        "//common:essential",
+    ],
+    implementation_deps = [
+        ":mathematical_program",
+        ":solve",
+        "//common:autodiff",
+        "//math:autodiff",
+        "//math:gradient",
+        "@clarabel_cpp_internal//:clarabel_cpp",
     ],
 )
 
@@ -2180,6 +2198,16 @@ drake_cc_googletest(
         ":solve",
         "//common/test_utilities:eigen_matrix_compare",
         "//common/test_utilities:expect_throws_message",
+    ],
+)
+
+drake_cc_googletest(
+    name = "solve_conic_program_test",
+    deps = [
+        ":solve_conic_program",
+        "//common/test_utilities:eigen_matrix_compare",
+        "//math:autodiff",
+        "//math:gradient",
     ],
 )
 

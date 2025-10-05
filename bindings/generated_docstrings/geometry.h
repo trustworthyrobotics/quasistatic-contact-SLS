@@ -50,6 +50,7 @@
 // #include "drake/geometry/scene_graph.h"
 // #include "drake/geometry/scene_graph_config.h"
 // #include "drake/geometry/scene_graph_inspector.h"
+// #include "drake/geometry/shape_2d_specification.h"
 // #include "drake/geometry/shape_specification.h"
 // #include "drake/geometry/utilities.h"
 
@@ -228,6 +229,11 @@ R"""(Returns the box's dimension along the z axis.)""";
 R"""(Returns the box's dimension along the x axis.)""";
         } width;
       } Box;
+      // Symbol: drake::geometry::CalcArea
+      struct /* CalcArea */ {
+        // Source: drake/geometry/shape_2d_specification.h
+        const char* doc = R"""(Calculates the area of the Shape2d.)""";
+      } CalcArea;
       // Symbol: drake::geometry::CalcVolume
       struct /* CalcVolume */ {
         // Source: drake/geometry/shape_specification.h
@@ -279,6 +285,28 @@ Raises:
           const char* doc = R"""()""";
         } radius;
       } Capsule;
+      // Symbol: drake::geometry::Circle
+      struct /* Circle */ {
+        // Source: drake/geometry/shape_2d_specification.h
+        const char* doc =
+R"""(Definition of a circle. It is centered in its canonical frame with the
+given radius.)""";
+        // Symbol: drake::geometry::Circle::Circle
+        struct /* ctor */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc =
+R"""(Constructs a sphere with the given ``radius``.
+
+Raises:
+    RuntimeError if ``radius`` is not finite *non-negative*. Note that
+    a zero radius is considered valid.)""";
+        } ctor;
+        // Symbol: drake::geometry::Circle::radius
+        struct /* radius */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc = R"""()""";
+        } radius;
+      } Circle;
       // Symbol: drake::geometry::CollisionFilterDeclaration
       struct /* CollisionFilterDeclaration */ {
         // Source: drake/geometry/collision_filter_declaration.h
@@ -5446,6 +5474,36 @@ visible.)""";
 R"""(A convenient alias for the MeshcatVisualizer class when using the
 ``double`` scalar type.)""";
       } MeshcatVisualizerd;
+      // Symbol: drake::geometry::Obround
+      struct /* Obround */ {
+        // Source: drake/geometry/shape_2d_specification.h
+        const char* doc =
+R"""(Definition of an obround. The obround can be thought of as a rectangle
+with circular caps attached. The obround's length refers to the length
+of the rectangular region, and the radius applies to the circular
+caps. The capsule is defined in its canonical frame C, centered on the
+frame origin and with the length of the obround parallel to the
+frame's x-axis.)""";
+        // Symbol: drake::geometry::Obround::Obround
+        struct /* ctor */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc =
+R"""(Constructs an obround with the given ``radius`` and ``length``.
+
+Raises:
+    RuntimeError if ``radius`` or ``length`` is not finite positive.)""";
+        } ctor;
+        // Symbol: drake::geometry::Obround::length
+        struct /* length */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc = R"""()""";
+        } length;
+        // Symbol: drake::geometry::Obround::radius
+        struct /* radius */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc = R"""()""";
+        } radius;
+      } Obround;
       // Symbol: drake::geometry::PerceptionProperties
       struct /* PerceptionProperties */ {
         // Source: drake/geometry/geometry_roles.h
@@ -6415,6 +6473,33 @@ the external files are included).
 Note: the path-valued supporting files are not validated with respect
 to their accessibility or even their existence.)""";
       } ReadGltfToMemory;
+      // Symbol: drake::geometry::Rectangle
+      struct /* Rectangle */ {
+        // Source: drake/geometry/shape_2d_specification.h
+        const char* doc =
+R"""(Definition of a rectangle. The rectangle is defined in its canonical
+frame C, centered on the frame origin and with the length of the
+rectangle parallel to the frame's x-axis.)""";
+        // Symbol: drake::geometry::Rectangle::Rectangle
+        struct /* ctor */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc =
+R"""(Constructs an rectangle with the given ``width`` and ``height``.
+
+Raises:
+    RuntimeError if ``width`` or ``height`` is not finite positive.)""";
+        } ctor;
+        // Symbol: drake::geometry::Rectangle::height
+        struct /* height */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc = R"""()""";
+        } height;
+        // Symbol: drake::geometry::Rectangle::width
+        struct /* width */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc = R"""()""";
+        } width;
+      } Rectangle;
       // Symbol: drake::geometry::Rgba
       struct /* Rgba */ {
         // Source: drake/geometry/rgba.h
@@ -8376,6 +8461,96 @@ R"""(Returns a string representation of this shape.)""";
 R"""(Returns the (unqualified) type name of this Shape, e.g., "Box".)""";
         } type_name;
       } Shape;
+      // Symbol: drake::geometry::Shape2d
+      struct /* Shape2d */ {
+        // Source: drake/geometry/shape_2d_specification.h
+        const char* doc =
+R"""(The abstract base class for all 2D shape specifications. Concrete
+subclasses exist for specific shapes (e.g., Circle, Obround, etc.).
+
+The Shape class has two key properties:
+
+- it is cloneable, and
+- it can be dispatched (see Visit).
+
+Note that the Shape2d class hierarchy is closed to third-party
+extensions. All Shape classes must be defined within Drake directly
+(and in this h/cc file pair in particular).)""";
+        // Symbol: drake::geometry::Shape2d::Clone
+        struct /* Clone */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc = R"""(Creates a copy of this shape.)""";
+        } Clone;
+        // Symbol: drake::geometry::Shape2d::DoClone
+        struct /* DoClone */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc = R"""((Internal use only) NVI for Clone().)""";
+        } DoClone;
+        // Symbol: drake::geometry::Shape2d::Shape2d
+        struct /* ctor */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc =
+R"""((Internal use only) Constructor for use by derived classes. All
+subclasses of Shape2d must be marked ``final``.)""";
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc_copy =
+R"""((Internal use only) For derived classes.)""";
+        } ctor;
+        // Symbol: drake::geometry::Shape2d::VariantShape2dConstPtr
+        struct /* VariantShape2dConstPtr */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc =
+R"""((Internal use only) All concrete subclasses, as const pointers.)""";
+        } VariantShape2dConstPtr;
+        // Symbol: drake::geometry::Shape2d::Visit
+        struct /* Visit */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc =
+R"""(Calls the given ``visitor`` function with ``*this`` as the sole
+argument, but with ``*this`` downcast to be the shape's concrete
+subclass. For example, if this shape is a Circle then calls
+``visitor(static_cast<const Box&>(*this))``.
+
+Template parameter ``ReturnType``:
+    The return type to coerce return values into. When not ``void``,
+    anything returned by the visitor must be implicitly convertible to
+    this type. When ``void``, the return type will be whatever the
+    Vistor's call operator returns by default.
+
+To see examples of how this is used, you can check the Drake source
+code, e.g., check the implementation of CalcArea() for one example.)""";
+        } Visit;
+        // Symbol: drake::geometry::Shape2d::do_to_string
+        struct /* do_to_string */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc =
+R"""((Internal use only) NVI for to_string().)""";
+        } do_to_string;
+        // Symbol: drake::geometry::Shape2d::do_type_name
+        struct /* do_type_name */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc =
+R"""((Internal use only) NVI for type_name().)""";
+        } do_type_name;
+        // Symbol: drake::geometry::Shape2d::get_variant_this
+        struct /* get_variant_this */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc =
+R"""((Internal use only) NVI-like helper function for Visit().)""";
+        } get_variant_this;
+        // Symbol: drake::geometry::Shape2d::to_string
+        struct /* to_string */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc =
+R"""(Returns a string representation of this shape.)""";
+        } to_string;
+        // Symbol: drake::geometry::Shape2d::type_name
+        struct /* type_name */ {
+          // Source: drake/geometry/shape_2d_specification.h
+          const char* doc =
+R"""(Returns the (unqualified) type name of this Shape, e.g., "Circle".)""";
+        } type_name;
+      } Shape2d;
       // Symbol: drake::geometry::ShapeReifier
       struct /* ShapeReifier */ {
         // Source: drake/geometry/shape_specification.h

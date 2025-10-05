@@ -58,6 +58,7 @@
 // #include "drake/solvers/snopt_solver.h"
 // #include "drake/solvers/solution_result.h"
 // #include "drake/solvers/solve.h"
+// #include "drake/solvers/solve_conic_program.h"
 // #include "drake/solvers/solver_base.h"
 // #include "drake/solvers/solver_id.h"
 // #include "drake/solvers/solver_interface.h"
@@ -1510,6 +1511,85 @@ of indeterminates, returns this concatenated vector.)""";
 R"""(Concatenates each element in ``var_list`` into a single Eigen vector
 of decision variables, returns this concatenated vector.)""";
       } ConcatenateVariableRefList;
+      // Symbol: drake::solvers::Cone
+      struct /* Cone */ {
+        // Source: drake/solvers/solve_conic_program.h
+        const char* doc = R"""(``Cone`` represents a cone constraint.)""";
+        // Symbol: drake::solvers::Cone::CalcLogBarrier
+        struct /* CalcLogBarrier */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc =
+R"""(Returns the log-barrier value -log(s), the log(⋅) function is specific
+to the cone type.)""";
+        } CalcLogBarrier;
+        // Symbol: drake::solvers::Cone::CalcLogBarrierGradient
+        struct /* CalcLogBarrierGradient */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc =
+R"""(Returns the gradient of the log-barrier ∇ₛ(-log(s)).)""";
+        } CalcLogBarrierGradient;
+        // Symbol: drake::solvers::Cone::CalcLogBarrierHessian
+        struct /* CalcLogBarrierHessian */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc =
+R"""(Returns the hessian of the log-barrier ∇ₛ²(-log(s)).)""";
+        } CalcLogBarrierHessian;
+        // Symbol: drake::solvers::Cone::Cone
+        struct /* ctor */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc = R"""()""";
+        } ctor;
+        // Symbol: drake::solvers::Cone::JordanIdentity
+        struct /* JordanIdentity */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc =
+R"""(Returns the identity element in Jordan algebra.)""";
+        } JordanIdentity;
+        // Symbol: drake::solvers::Cone::JordanLeftMul
+        struct /* JordanLeftMul */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc =
+R"""(Computes the Jordan left multiplicative matrix L(s), so that L(s) z =
+s ∘ z.)""";
+        } JordanLeftMul;
+        // Symbol: drake::solvers::Cone::JordanLeftMulInverse
+        struct /* JordanLeftMulInverse */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc =
+R"""(Computes the Jordan left multiplicative inverse L(s)⁻¹, so that L(s)⁻¹
+(s ∘ z) = z.)""";
+        } JordanLeftMulInverse;
+        // Symbol: drake::solvers::Cone::Tag
+        struct /* Tag */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc = R"""()""";
+          // Symbol: drake::solvers::Cone::Tag::NonnegativeCone
+          struct /* NonnegativeCone */ {
+            // Source: drake/solvers/solve_conic_program.h
+            const char* doc = R"""()""";
+          } NonnegativeCone;
+          // Symbol: drake::solvers::Cone::Tag::SecondOrderCone
+          struct /* SecondOrderCone */ {
+            // Source: drake/solvers/solve_conic_program.h
+            const char* doc = R"""()""";
+          } SecondOrderCone;
+        } Tag;
+        // Symbol: drake::solvers::Cone::degree
+        struct /* degree */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc = R"""()""";
+        } degree;
+        // Symbol: drake::solvers::Cone::dimension
+        struct /* dimension */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc = R"""()""";
+        } dimension;
+        // Symbol: drake::solvers::Cone::tag
+        struct /* tag */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc = R"""()""";
+        } tag;
+      } Cone;
       // Symbol: drake::solvers::Constraint
       struct /* Constraint */ {
         // Source: drake/solvers/constraint.h
@@ -8733,6 +8813,17 @@ R"""(The return status of NLopt solver. Please refer to
 https://nlopt.readthedocs.io/en/latest/NLopt_Reference/#return-values.)""";
         } status;
       } NloptSolverDetails;
+      // Symbol: drake::solvers::NonnegativeCone
+      struct /* NonnegativeCone */ {
+        // Source: drake/solvers/solve_conic_program.h
+        const char* doc =
+R"""(A non-negative cone describes the set { s ∈ ℝⁿ : sᵢ ≥ 0, ∀i=1,⋯,n })""";
+        // Symbol: drake::solvers::NonnegativeCone::NonnegativeCone
+        struct /* ctor */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc = R"""()""";
+        } ctor;
+      } NonnegativeCone;
       // Symbol: drake::solvers::OsqpSolver
       struct /* OsqpSolver */ {
         // Source: drake/solvers/osqp_solver.h
@@ -10044,6 +10135,17 @@ the version used in Drake.)""";
 R"""(The dual variable values at termination.)""";
         } y;
       } ScsSolverDetails;
+      // Symbol: drake::solvers::SecondOrderCone
+      struct /* SecondOrderCone */ {
+        // Source: drake/solvers/solve_conic_program.h
+        const char* doc =
+R"""(A second-order cone describes the set { (s₀, s₁) ∈ ℝⁿ : s₀ ≥ ∣∣s₁∣∣₂ })""";
+        // Symbol: drake::solvers::SecondOrderCone::SecondOrderCone
+        struct /* ctor */ {
+          // Source: drake/solvers/solve_conic_program.h
+          const char* doc = R"""()""";
+        } ctor;
+      } SecondOrderCone;
       // Symbol: drake::solvers::SemidefiniteRelaxationOptions
       struct /* SemidefiniteRelaxationOptions */ {
         // Source: drake/solvers/semidefinite_relaxation.h
@@ -10290,6 +10392,49 @@ Returns:
         const char* doc_2args =
 R"""(Solves an optimization program with a given initial guess.)""";
       } Solve;
+      // Symbol: drake::solvers::SolveConicProgram
+      struct /* SolveConicProgram */ {
+        // Source: drake/solvers/solve_conic_program.h
+        const char* doc =
+R"""(Solves conic program of the form: minimimze ½ xᵀ P x + qᵀ x subject to
+b - A x ∈ 𝒦
+
+Parameter ``P``:
+    The P matrix.
+
+Parameter ``q``:
+    The q vector.
+
+Parameter ``A``:
+    The A matrix.
+
+Parameter ``b``:
+    The b vector.
+
+Parameter ``cones``:
+    Cones for which their cartesian product define 𝒦.
+
+Parameter ``mu_target``:
+    The target complementarity value μ.
+
+Parameter ``dx_dmu``:
+    Derivative of primal solution with respect to μ, ∂x/∂μ;
+
+Parameter ``dz_dmu``:
+    Derivative of dual solution with respect to μ, ∂z/∂μ;
+
+Returns:
+    The primal solution x and dual solution z.
+
+Raises:
+    RuntimeError if the solver fails.
+
+Precondition:
+    The matrices, vectors, and cones have compatible sizes.
+
+Precondition:
+    ``mu_target >= 0``.)""";
+      } SolveConicProgram;
       // Symbol: drake::solvers::SolveInParallel
       struct /* SolveInParallel */ {
         // Source: drake/solvers/solve.h

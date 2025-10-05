@@ -70,6 +70,7 @@ LIBDRAKE_COMPONENTS = [
     "//multibody/parsing",
     "//multibody/plant",
     "//multibody/plant:contact_results_to_lcm",  # unpackaged
+    "//multibody/quasidynamic",
     "//multibody/rational",
     "//multibody/topology",
     "//multibody/tree",

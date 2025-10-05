@@ -420,6 +420,7 @@ PYI_FILES = [
     "pydrake/multibody/optimization.pyi",
     "pydrake/multibody/parsing.pyi",
     "pydrake/multibody/plant.pyi",
+    "pydrake/multibody/quasidynamic.pyi",
     "pydrake/multibody/rational.pyi",
     "pydrake/multibody/tree.pyi",
     "pydrake/perception.pyi",

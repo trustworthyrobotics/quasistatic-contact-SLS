@@ -385,8 +385,8 @@ R"""(The point on B that most deeply penetrates A, measured and expressed
 in the world frame.)""";
         } p_WCb;
       } PenetrationAsPointPair;
-      // Symbol: drake::geometry::SignedDistancePair
-      struct /* SignedDistancePair */ {
+      // Symbol: drake::geometry::SignedDistancePairImpl
+      struct /* SignedDistancePairImpl */ {
         // Source: drake/geometry/query_results/signed_distance_pair.h
         const char* doc =
 R"""(The data for reporting the signed distance between two geometries, A
@@ -411,7 +411,7 @@ Warning:
 
 Template parameter ``T``:
     The underlying scalar type. Must be a valid Eigen scalar.)""";
-        // Symbol: drake::geometry::SignedDistancePair::SignedDistancePair<T>
+        // Symbol: drake::geometry::SignedDistancePairImpl::SignedDistancePairImpl<T, dim>
         struct /* ctor */ {
           // Source: drake/geometry/query_results/signed_distance_pair.h
           const char* doc =
@@ -438,49 +438,49 @@ Parameter ``nhat_BA_W_in``:
 Precondition:
     nhat_BA_W_in is unit-length.)""";
         } ctor;
-        // Symbol: drake::geometry::SignedDistancePair::SwapAAndB
+        // Symbol: drake::geometry::SignedDistancePairImpl::SwapAAndB
         struct /* SwapAAndB */ {
           // Source: drake/geometry/query_results/signed_distance_pair.h
           const char* doc =
 R"""(Swaps the interpretation of geometries A and B.)""";
         } SwapAAndB;
-        // Symbol: drake::geometry::SignedDistancePair::distance
+        // Symbol: drake::geometry::SignedDistancePairImpl::distance
         struct /* distance */ {
           // Source: drake/geometry/query_results/signed_distance_pair.h
           const char* doc =
 R"""(The signed distance between p_ACa and p_BCb.)""";
         } distance;
-        // Symbol: drake::geometry::SignedDistancePair::id_A
+        // Symbol: drake::geometry::SignedDistancePairImpl::id_A
         struct /* id_A */ {
           // Source: drake/geometry/query_results/signed_distance_pair.h
           const char* doc =
 R"""(The id of the first geometry in the pair.)""";
         } id_A;
-        // Symbol: drake::geometry::SignedDistancePair::id_B
+        // Symbol: drake::geometry::SignedDistancePairImpl::id_B
         struct /* id_B */ {
           // Source: drake/geometry/query_results/signed_distance_pair.h
           const char* doc =
 R"""(The id of the second geometry in the pair.)""";
         } id_B;
-        // Symbol: drake::geometry::SignedDistancePair::nhat_BA_W
+        // Symbol: drake::geometry::SignedDistancePairImpl::nhat_BA_W
         struct /* nhat_BA_W */ {
           // Source: drake/geometry/query_results/signed_distance_pair.h
           const char* doc =
 R"""(A direction of fastest increasing distance.)""";
         } nhat_BA_W;
-        // Symbol: drake::geometry::SignedDistancePair::p_ACa
+        // Symbol: drake::geometry::SignedDistancePairImpl::p_ACa
         struct /* p_ACa */ {
           // Source: drake/geometry/query_results/signed_distance_pair.h
           const char* doc =
 R"""(The witness point on geometry A's surface, expressed in A's frame.)""";
         } p_ACa;
-        // Symbol: drake::geometry::SignedDistancePair::p_BCb
+        // Symbol: drake::geometry::SignedDistancePairImpl::p_BCb
         struct /* p_BCb */ {
           // Source: drake/geometry/query_results/signed_distance_pair.h
           const char* doc =
 R"""(The witness point on geometry B's surface, expressed in B's frame.)""";
         } p_BCb;
-      } SignedDistancePair;
+      } SignedDistancePairImpl;
       // Symbol: drake::geometry::SignedDistanceToPoint
       struct /* SignedDistanceToPoint */ {
         // Source: drake/geometry/query_results/signed_distance_to_point.h

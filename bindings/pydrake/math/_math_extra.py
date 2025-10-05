@@ -145,11 +145,21 @@ def _rigid_transform_repr(X):
     )
 
 
+def _rigid_transform_2d_repr(X):
+    return (
+        f"{_pretty_class_name(type(X))}(\n"
+        f"  theta={_indented_repr(X.angle())},\n"
+        f"  p={_indented_repr(X.translation().tolist())},\n"
+        f")"
+    )
+
+
 def _add_repr_functions():
     for T in [float, _AutoDiffXd, _sym.Expression]:
         RollPitchYaw_[T].__repr__ = _roll_pitch_yaw_repr
         RotationMatrix_[T].__repr__ = _rotation_matrix_repr
         RigidTransform_[T].__repr__ = _rigid_transform_repr
+        RigidTransform2d_[T].__repr__ = _rigid_transform_2d_repr
 
 
 _add_repr_functions()

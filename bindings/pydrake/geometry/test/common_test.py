@@ -901,3 +901,43 @@ class TestGeometryCore(unittest.TestCase):
         numpy_compare.assert_equal(
             unpickled_plane0.reference_point(), plane.reference_point()
         )
+
+    def test_shapes_2d(self):
+        shapes = []
+
+        circle = mut.Circle(radius=1.0)
+        self.assertEqual(circle.radius(), 1.0)
+        assert_pickle(self, circle, repr)
+        numpy_compare.assert_float_allclose(mut.CalcArea(circle), np.pi)
+        shapes.append(circle)
+
+        obround = mut.Obround(radius=1.0, length=2.0)
+        self.assertEqual(obround.radius(), 1.0)
+        self.assertEqual(obround.length(), 2.0)
+        assert_pickle(self, obround, repr)
+        numpy_compare.assert_float_allclose(mut.CalcArea(obround), np.pi + 4)
+        shapes.append(obround)
+
+        rectangle = mut.Rectangle(width=3.0, height=2.0)
+        self.assertEqual(rectangle.width(), 3.0)
+        self.assertEqual(rectangle.height(), 2.0)
+        assert_pickle(self, rectangle, repr)
+        numpy_compare.assert_float_allclose(mut.CalcArea(rectangle), 6.0)
+        shapes.append(rectangle)
+
+        for shape in shapes:
+            self.assertIsInstance(shape, mut.Shape2d)
+            shape_cls = type(shape)
+            shape_cls_name = shape_cls.__name__
+
+            shape_clone = shape.Clone()
+            self.assertIsInstance(shape_clone, shape_cls)
+            self.assertIsNot(shape_clone, shape)
+
+            shape_copy = copy.deepcopy(shape)
+            self.assertIsInstance(shape_copy, shape_cls)
+            self.assertIsNot(shape_copy, shape)
+
+            new_shape = eval(repr(shape), {shape_cls_name: shape_cls})
+            self.assertIsInstance(new_shape, shape_cls)
+            self.assertEqual(repr(new_shape), repr(shape))

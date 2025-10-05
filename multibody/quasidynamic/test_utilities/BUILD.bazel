@@ -1,0 +1,31 @@
+load("//tools/lint:lint.bzl", "add_lint_tests")
+load(
+    "//tools/skylark:drake_cc.bzl",
+    "drake_cc_library",
+    "drake_cc_package_library",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+drake_cc_package_library(
+    name = "test_utilities",
+    testonly = 1,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":eval_quasidynamic_differentiable_contact_model",
+    ],
+)
+
+drake_cc_library(
+    name = "eval_quasidynamic_differentiable_contact_model",
+    testonly = 1,
+    srcs = ["eval_quasidynamic_differentiable_contact_model.cc"],
+    hdrs = ["eval_quasidynamic_differentiable_contact_model.h"],
+    deps = [
+        "//math:autodiff",
+        "//math:gradient",
+        "//multibody/quasidynamic:quasidynamic_differentiable_contact_model",
+    ],
+)
+
+add_lint_tests()
