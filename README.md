@@ -14,6 +14,11 @@ cd quasistatic-contact-SLS
 # Install the build dependencies.
 setup/install_prereqs
 
+# Create conda environment.
+conda create -n quasistatic-contact-SLS python=3.12
+conda activate quasistatic-contact-SLS
+conda install numpy matplotlib PyYAML
+
 # Build and install using standard CMake commands.
 mkdir build
 cd build
